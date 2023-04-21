@@ -20,6 +20,7 @@ class ViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization() // запрашиваем разрешение на получение геоданных
         locationManager.requestLocation() // запрашиваем геоданные пользователя единоразово
         
+        view.backgroundColor = .cyan
         
     }
 }
