@@ -49,7 +49,7 @@ final class HeaderView: UIView {
         NSLayoutConstraint.activate([
             headerStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             headerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            headerStackView.topAnchor.constraint(equalTo: topAnchor),
+            headerStackView.topAnchor.constraint(equalTo: topAnchor)
         ])
     }
     

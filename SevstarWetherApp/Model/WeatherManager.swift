@@ -8,64 +8,196 @@
 import Foundation
 import CoreLocation
 
-protocol WeatherManagerDelegate {
-    func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel)
-    func didFailWithError(error: Error)
-    
-}
-
-struct WeatherManager {
-    
-    let weatherURL =  "https://api.openweathermap.org/data/2.5/weather?appid=aa819990e915321117e0a69863a72ba3&units=metric"
-    
-    var delegate: WeatherManagerDelegate?
-    
-    func fetchWeather(cityName: String) {
-        let urlString = "\(weatherURL)&q=\(cityName)"
-        performRequest(with: urlString)
-    } // получаем название города для того чтобы добватьб его в урл
-    
-    func fetchWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
-        let  urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
-        performRequest(with: urlString)
-    } //получаем урл из широты и долготы
-    
-    func performRequest(with urlString: String) {
-        //1. создаем a URL
-        if let url  = URL(string: urlString) {
-            //2. создаем URLSession
-            let session = URLSession(configuration: .default)
-            //3. Даем сессии задачу
-            let task = session.dataTask(with: url) { (data, response, error) in
-                if error != nil {
-                    self.delegate?.didFailWithError(error: error!)
-                    return
-                } // если ошибка не равна нулю возвращаем функцию и продолжаем работать, если есть ошибка - печатаем ее в консоле, можно сделать алерт
-                if let safeData = data {
-                    if let weather = self.parseJSON(safeData) {
-                        self.delegate?.didUpdateWeather(self, weather: weather)
-                    }
-                }
+struct WeatherManager: NetworkManagerProtocol {
+    func fetchCurrentWeather(city: String, completion: @escaping (WeatherModel) -> ()) {
+        let formattedCity = city.replacingOccurrences(of: " ", with: "+") // если мы хотим найти город с пробелом в названии мы добавляем плюс
+        let weatherURL =  "https://api.openweathermap.org/data/2.5/weather?appid=aa819990e915321117e0a69863a72ba3&units=metricq=\(formattedCity)"
+        
+        guard let url = URL(string: weatherURL) else {
+            fatalError()
+        }
+        
+        let urlRequest = URLRequest(url: url)
+        URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            guard let data = data else { return }
+            
+            do {
+                let currentWeather = try JSONDecoder().decode(WeatherModel.self, from: data)
+                completion(currentWeather)
+            } catch {
+                print(error)
+                //TODO: сделать алерт с ошибкой при ненахождении подходящего города
             }
-            //4. продолжаем выполнять задачу
-            task.resume()
-        }
-    }
+            
+        }.resume()
+    } // получаем текущую погоду
     
-    func parseJSON(_ weatherData: Data) -> WeatherModel? {
-        let decoder = JSONDecoder() // создаем константу декодирования
-        do {
-            let decodedData = try decoder.decode(WeatherData.self, from: weatherData) //выбираем, что декодировать
-            let id = decodedData.weather[0].id
-            let temp = decodedData.main.temp
-            let cityName = decodedData.name
-            
-            let weather = WeatherModel(conditionID: id, cityName: cityName, temperature: temp) // создаем объект
-            return weather
-            
-        } catch {
-            delegate?.didFailWithError(error: error) // если не получается декодировать данные пишем ошибку
-            return nil
+    func fetchCurrentLocationWeather(lat: String, lon: String, completion: @escaping (WeatherModel) -> ()) {
+        let weatherURL = "http://api.openweathermap.org/data/2.5/weather?lat=\(lat)&lon=\(lon)&appid=aa819990e915321117e0a69863a72ba3&units=metric"
+        
+        guard let url = URL(string: weatherURL) else {
+            fatalError()
         }
+        let urlRequest = URLRequest(url: url)
+        URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            guard let data = data else { return }
+            do {
+                let currentWeather = try JSONDecoder().decode(WeatherModel.self, from: data)
+                completion(currentWeather)
+            } catch {
+                print(error)
+            }
+            
+        }.resume()
+    }//получаем погоду по текущему местополжению
+    
+    
+    func fetchWeatherForecast(city: String, completion: @escaping ([ForecastTemperature]) -> ()) {
+        let formattedCity = city.replacingOccurrences(of: " ", with: "+")
+        let weatherURL =  "https://api.openweathermap.org/data/2.5/weather?appid=aa819990e915321117e0a69863a72ba3&units=metric&q=\(formattedCity)"
+        
+        var currentDayTemp = ForecastTemperature(weekDay: nil, hourlyForecast: nil)
+        var secondDayTemp = ForecastTemperature(weekDay: nil, hourlyForecast: nil)
+        var thirdDayTemp = ForecastTemperature(weekDay: nil, hourlyForecast: nil)
+        var fourthDayTemp = ForecastTemperature(weekDay: nil, hourlyForecast: nil)
+        var fifthDayTemp = ForecastTemperature(weekDay: nil, hourlyForecast: nil)
+        var sixthDayTemp = ForecastTemperature(weekDay: nil, hourlyForecast: nil)
+        
+        guard let url = URL(string: weatherURL) else {
+            fatalError()
+        }
+        let urlRequest = URLRequest(url: url)
+        URLSession.shared.dataTask(with: urlRequest) { [unowned self] (data, response, error) in
+//            guard let strongSelf = self else { return }
+            guard let self = self else { return }
+            guard let data = data else { return }
+            do {
+                
+                var forecastWeather = try JSONDecoder().decode(ForecastModel.self, from: data)
+                
+                var forecastmodelArray : [ForecastTemperature] = []
+                var fetchedData : [WeatherInfo] = [] //Just for loop completion
+                
+                var currentDayForecast : [WeatherInfo] = []
+                var secondDayForecast : [WeatherInfo] = []
+                var thirddayDayForecast : [WeatherInfo] = []
+                var fourthDayDayForecast : [WeatherInfo] = []
+                var fifthDayForecast : [WeatherInfo] = []
+                var sixthDayForecast : [WeatherInfo] = []
+                
+                print("Total data:", forecastWeather.list.count)
+                var totalData = forecastWeather.list.count //Should be 40 all the time
+                
+                for day in 0...forecastWeather.list.count - 1 {
+                    
+                    
+                    let listIndex = day//(8 * day) - 1
+                    let mainTemp = forecastWeather.list[listIndex].main.temp
+                    let minTemp = forecastWeather.list[listIndex].main.temp_min
+                    let maxTemp = forecastWeather.list[listIndex].main.temp_max
+                    let descriptionTemp = forecastWeather.list[listIndex].weather[0].description
+                    let icon = forecastWeather.list[listIndex].weather[0].icon
+                    let time = forecastWeather.list[listIndex].dt_txt!
+                    
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.calendar = Calendar(identifier: .gregorian)
+                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    let date = dateFormatter.date(from: forecastWeather.list[listIndex].dt_txt!)
+                    
+                    let calendar = Calendar.current
+                    let components = calendar.dateComponents([.weekday], from: date!)
+                    let weekdaycomponent = components.weekday! - 1  //Just the integer value from 0 to 6
+                    
+                    let f = DateFormatter()
+                    let weekday = f.weekdaySymbols[weekdaycomponent] // 0 Sunday 6 - Saturday //This is where we are getting the string val (Mon/Tue/Wed...)
+                    
+                    let currentDayComponent = calendar.dateComponents([.weekday], from: Date())
+                    let currentWeekDay = currentDayComponent.weekday! - 1
+                    let currentweekdaysymbol = f.weekdaySymbols[currentWeekDay]
+                    
+                    if weekdaycomponent == currentWeekDay - 1 {
+                        totalData = totalData - 1
+                    }
+                    
+                    
+                    if weekdaycomponent == currentWeekDay {
+                        let info = WeatherInfo(temp: mainTemp, min_temp: minTemp, max_temp: maxTemp, description: descriptionTemp, icon: icon, time: time)
+                        currentDayForecast.append(info)
+                        currentDayTemp = ForecastTemperature(weekDay: currentweekdaysymbol, hourlyForecast: currentDayForecast)
+                        print("1")
+                        fetchedData.append(info)
+                    } else if weekdaycomponent == currentWeekDay.incrementWeekDays(by: 1) {
+                        let info = WeatherInfo(temp: mainTemp, min_temp: minTemp, max_temp: maxTemp, description: descriptionTemp, icon: icon, time: time)
+                        secondDayForecast.append(info)
+                        secondDayTemp = ForecastTemperature(weekDay: weekday, hourlyForecast: secondDayForecast)
+                        print("2")
+                        fetchedData.append(info)
+                    } else if weekdaycomponent == currentWeekDay.incrementWeekDays(by: 2) {
+                        let info = WeatherInfo(temp: mainTemp, min_temp: minTemp, max_temp: maxTemp, description: descriptionTemp, icon: icon, time: time)
+                        thirddayDayForecast.append(info)
+                        print("3")
+                        thirdDayTemp = ForecastTemperature(weekDay: weekday, hourlyForecast: thirddayDayForecast)
+                        fetchedData.append(info)
+                    } else if weekdaycomponent == currentWeekDay.incrementWeekDays(by: 3) {
+                        let info = WeatherInfo(temp: mainTemp, min_temp: minTemp, max_temp: maxTemp, description: descriptionTemp, icon: icon, time: time)
+                        fourthDayDayForecast.append(info)
+                        print("4")
+                        fourthDayTemp = ForecastTemperature(weekDay: weekday, hourlyForecast: fourthDayDayForecast)
+                        fetchedData.append(info)
+                    } else if weekdaycomponent == currentWeekDay.incrementWeekDays(by: 4){
+                        let info = WeatherInfo(temp: mainTemp, min_temp: minTemp, max_temp: maxTemp, description: descriptionTemp, icon: icon, time: time)
+                        fifthDayForecast.append(info)
+                        fifthDayTemp = ForecastTemperature(weekDay: weekday, hourlyForecast: fifthDayForecast)
+                        fetchedData.append(info)
+                        print("5")
+                    } else if weekdaycomponent == currentWeekDay.incrementWeekDays(by: 5) {
+                        let info = WeatherInfo(temp: mainTemp, min_temp: minTemp, max_temp: maxTemp, description: descriptionTemp, icon: icon, time: time)
+                        sixthDayForecast.append(info)
+                        sixthDayTemp = ForecastTemperature(weekDay: weekday, hourlyForecast: sixthDayForecast)
+                        fetchedData.append(info)
+                        print("6")
+                    }
+                    
+                    
+                    if fetchedData.count == totalData {
+                        
+                        if currentDayTemp.hourlyForecast?.count ?? 0 > 0 {
+                            forecastmodelArray.append(currentDayTemp)
+                        }
+                        
+                        if secondDayTemp.hourlyForecast?.count ?? 0 > 0 {
+                            forecastmodelArray.append(secondDayTemp)
+                        }
+                        
+                        if thirdDayTemp.hourlyForecast?.count ?? 0 > 0 {
+                            forecastmodelArray.append(thirdDayTemp)
+                        }
+                        
+                        if fourthDayTemp.hourlyForecast?.count ?? 0 > 0 {
+                            forecastmodelArray.append(fourthDayTemp)
+                        }
+                        
+                        if fifthDayTemp.hourlyForecast?.count ?? 0 > 0 {
+                            forecastmodelArray.append(fifthDayTemp)
+                        }
+                        
+                        if sixthDayTemp.hourlyForecast?.count ?? 0 > 0 {
+                            forecastmodelArray.append(sixthDayTemp)
+                        }
+                        
+                        if forecastmodelArray.count <= 6 {
+                            completion(forecastmodelArray)
+                        }
+                        
+                    }
+                    
+                    
+                    
+                }
+            } catch {
+                print(error)
+            }
+            
+        }.resume()
     }
 }
