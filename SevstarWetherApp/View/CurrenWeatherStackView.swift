@@ -9,26 +9,49 @@ import UIKit
 
 final class CurrenWeatherStackView: UIView {
     
-    private lazy var temperatureLabel: UILabel = {
+    let currentTime: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.text = "7C"
+        view.text = "28 March 2020"
+        view.font = .boldSystemFont(ofSize: 20)
+        view.textAlignment = .center
+        view.textColor = .black
+        return view
+    }()
+    
+    let weatherSymbol: UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.image = UIImage(systemName: "cloud.fill")
+        image.contentMode = .scaleAspectFit
+        image.tintColor = .gray
+        image.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        return image
+    }()
+    
+    let temperatureLabel: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.text = "---"
+        view.textAlignment = .center
         view.font = .boldSystemFont(ofSize: 30)
         return view
     }()
     
-    private lazy var feelsLikeLabel: UILabel = {
+    let feelsLikeLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "ощущается как 7С"
+        view.textAlignment = .center
         view.font = .boldSystemFont(ofSize: 20)
         view.textColor = .black
         view.layer.opacity = 0.9
         return view
     }()
     
-    private lazy var currentWeatherStackView: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [temperatureLabel, feelsLikeLabel])
+    lazy var currentWeatherStackView: UIStackView = {
+        let view = UIStackView(arrangedSubviews: [currentTime, weatherSymbol, temperatureLabel, feelsLikeLabel])
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .vertical
         return view

@@ -25,9 +25,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        locationManager.delegate = self
-//        locationManager.requestWhenInUseAuthorization() // запрашиваем разрешение на получение геоданных
-//        locationManager.requestLocation() // запрашиваем геоданные пользователя единоразово
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization() // запрашиваем разрешение на получение геоданных
+        locationManager.requestLocation() // запрашиваем геоданные пользователя единоразово
+        
+        weatherManager.delegate = self
+        
         setupView()
         
     }
@@ -46,9 +49,10 @@ class ViewController: UIViewController {
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
         ])
         NSLayoutConstraint.activate([
+            currentWeatherView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             currentWeatherView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             currentWeatherView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            currentWeatherView.topAnchor.constraint(equalTo: view.topAnchor),
+            currentWeatherView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             currentWeatherView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
@@ -57,20 +61,38 @@ class ViewController: UIViewController {
 
 
 
-////MARK: - LocationManager
-//
-//extension ViewController: CLLocationManagerDelegate {
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        if let location = locations.last {
-//            locationManager.stopUpdatingLocation()
-//            let lat = location.coordinate.latitude
-//            let lon = location.coordinate.longitude
-////            weatherManager.fetchWeather(latitude: lat, longitude: lon)
-//        }
-//    } //получаем данные о местополжении
-//
-//    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-//        print(error)
-//    }
-//}
+
+//MARK: - WeatherManagerDelegate
+
+extension ViewController: WeatherManagerDelegate {
+    
+    func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
+        DispatchQueue.main.async {
+            self.currentWeatherView.temperatureLabel.text = weather.temperatureString
+            self.currentWeatherView.weatherSymbol.image = UIImage(systemName: weather.conditionName)
+            self.headerView.headingLabel.text = weather.cityName
+        }
+    }
+    
+    func didFailWithError(error: Error) {
+        print(error)
+    }
+}
+
+//MARK: - LocationManager
+
+extension ViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            locationManager.stopUpdatingLocation()
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            weatherManager.fetchWeather(latitude: lat, longitude: lon)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
+    }
+}
 

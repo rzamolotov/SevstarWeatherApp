@@ -12,14 +12,13 @@
 		7673CCC829F2CAF900FD1AED /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCC729F2CAF900FD1AED /* ViewController.swift */; };
 		7673CCCD29F2CAFC00FD1AED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7673CCCC29F2CAFC00FD1AED /* Assets.xcassets */; };
 		7673CCD029F2CAFC00FD1AED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7673CCCE29F2CAFC00FD1AED /* LaunchScreen.storyboard */; };
-		7673CCDB29F2CBAF00FD1AED /* Wether.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCDA29F2CBAF00FD1AED /* Wether.swift */; };
+		7673CCDB29F2CBAF00FD1AED /* WetherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCDA29F2CBAF00FD1AED /* WetherData.swift */; };
 		7673CCDD29F2CBDE00FD1AED /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCDC29F2CBDE00FD1AED /* WeatherManager.swift */; };
 		7673CCE129F317F700FD1AED /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCE029F317F700FD1AED /* HeaderView.swift */; };
-		7673CCE329F319BB00FD1AED /* CurrentWeatherBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCE229F319BB00FD1AED /* CurrentWeatherBackgroundView.swift */; };
-		7673CCE529F3243D00FD1AED /* NetworkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCE429F3243D00FD1AED /* NetworkManagerProtocol.swift */; };
 		7673CCE929F327D900FD1AED /* Forecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCE829F327D900FD1AED /* Forecast.swift */; };
 		7673CCEC29F3374300FD1AED /* IntExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCEB29F3374300FD1AED /* IntExtention.swift */; };
 		7673CCEE29F3A1E200FD1AED /* CurrenWeatherStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCED29F3A1E200FD1AED /* CurrenWeatherStackView.swift */; };
+		7673CCF029F3AFE300FD1AED /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCEF29F3AFE300FD1AED /* WeatherModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,14 +29,13 @@
 		7673CCCC29F2CAFC00FD1AED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7673CCCF29F2CAFC00FD1AED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7673CCD129F2CAFC00FD1AED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7673CCDA29F2CBAF00FD1AED /* Wether.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wether.swift; sourceTree = "<group>"; };
+		7673CCDA29F2CBAF00FD1AED /* WetherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WetherData.swift; sourceTree = "<group>"; };
 		7673CCDC29F2CBDE00FD1AED /* WeatherManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherManager.swift; sourceTree = "<group>"; };
 		7673CCE029F317F700FD1AED /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
-		7673CCE229F319BB00FD1AED /* CurrentWeatherBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherBackgroundView.swift; sourceTree = "<group>"; };
-		7673CCE429F3243D00FD1AED /* NetworkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerProtocol.swift; sourceTree = "<group>"; };
 		7673CCE829F327D900FD1AED /* Forecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Forecast.swift; sourceTree = "<group>"; };
 		7673CCEB29F3374300FD1AED /* IntExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtention.swift; sourceTree = "<group>"; };
 		7673CCED29F3A1E200FD1AED /* CurrenWeatherStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenWeatherStackView.swift; sourceTree = "<group>"; };
+		7673CCEF29F3AFE300FD1AED /* WeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,10 +84,10 @@
 		7673CCD729F2CB4C00FD1AED /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7673CCDA29F2CBAF00FD1AED /* Wether.swift */,
+				7673CCDA29F2CBAF00FD1AED /* WetherData.swift */,
+				7673CCEF29F3AFE300FD1AED /* WeatherModel.swift */,
 				7673CCE829F327D900FD1AED /* Forecast.swift */,
 				7673CCDC29F2CBDE00FD1AED /* WeatherManager.swift */,
-				7673CCE429F3243D00FD1AED /* NetworkManagerProtocol.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -106,7 +104,6 @@
 			isa = PBXGroup;
 			children = (
 				7673CCE029F317F700FD1AED /* HeaderView.swift */,
-				7673CCE229F319BB00FD1AED /* CurrentWeatherBackgroundView.swift */,
 				7673CCED29F3A1E200FD1AED /* CurrenWeatherStackView.swift */,
 			);
 			path = View;
@@ -192,15 +189,14 @@
 			files = (
 				7673CCEE29F3A1E200FD1AED /* CurrenWeatherStackView.swift in Sources */,
 				7673CCDD29F2CBDE00FD1AED /* WeatherManager.swift in Sources */,
-				7673CCE529F3243D00FD1AED /* NetworkManagerProtocol.swift in Sources */,
-				7673CCDB29F2CBAF00FD1AED /* Wether.swift in Sources */,
+				7673CCF029F3AFE300FD1AED /* WeatherModel.swift in Sources */,
+				7673CCDB29F2CBAF00FD1AED /* WetherData.swift in Sources */,
 				7673CCC829F2CAF900FD1AED /* ViewController.swift in Sources */,
 				7673CCC429F2CAF900FD1AED /* AppDelegate.swift in Sources */,
 				7673CCC629F2CAF900FD1AED /* SceneDelegate.swift in Sources */,
 				7673CCEC29F3374300FD1AED /* IntExtention.swift in Sources */,
 				7673CCE129F317F700FD1AED /* HeaderView.swift in Sources */,
 				7673CCE929F327D900FD1AED /* Forecast.swift in Sources */,
-				7673CCE329F319BB00FD1AED /* CurrentWeatherBackgroundView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,7 +338,7 @@
 				DEVELOPMENT_TEAM = 9S5AJR5C22;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SevstarWetherApp/Info.plist;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Дайте пожалуйста доступ к своим геоданным для корректного предоставления погоды.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Разрешите приложению использовать вашу геопозицию для определения погоды";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
@@ -374,7 +370,7 @@
 				DEVELOPMENT_TEAM = 9S5AJR5C22;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SevstarWetherApp/Info.plist;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Дайте пожалуйста доступ к своим геоданным для корректного предоставления погоды.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Разрешите приложению использовать вашу геопозицию для определения погоды";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
