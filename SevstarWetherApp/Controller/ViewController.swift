@@ -50,8 +50,6 @@ class ViewController: UIViewController {
         ])
         NSLayoutConstraint.activate([
             currentWeatherView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            currentWeatherView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            currentWeatherView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             currentWeatherView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             currentWeatherView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])

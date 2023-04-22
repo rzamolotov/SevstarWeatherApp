@@ -12,7 +12,7 @@ final class CurrenWeatherStackView: UIView {
     let currentTime: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.text = "28 March 2020"
+        view.text = "-- ------ ----"
         view.font = .boldSystemFont(ofSize: 20)
         view.textAlignment = .center
         view.textColor = .black
@@ -22,7 +22,7 @@ final class CurrenWeatherStackView: UIView {
     let weatherSymbol: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.image = UIImage(systemName: "cloud.fill")
+        image.image = UIImage(systemName: "sun.max")
         image.contentMode = .scaleAspectFit
         image.tintColor = .gray
         image.widthAnchor.constraint(equalToConstant: 100).isActive = true
@@ -39,10 +39,19 @@ final class CurrenWeatherStackView: UIView {
         return view
     }()
     
+    let degreesLabel: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.text = "°C"
+        view.textAlignment = .center
+        view.font = .boldSystemFont(ofSize: 30)
+        return view
+    }()
+    
     let feelsLikeLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.text = "ощущается как 7С"
+        view.text = "ощущается как"
         view.textAlignment = .center
         view.font = .boldSystemFont(ofSize: 20)
         view.textColor = .black
@@ -50,8 +59,37 @@ final class CurrenWeatherStackView: UIView {
         return view
     }()
     
+    let feelsLikeDegrees: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.text = "---"
+        view.textAlignment = .center
+        view.font = .boldSystemFont(ofSize: 20)
+        view.textColor = .black
+        view.layer.opacity = 0.9
+        return view
+    }()
+    
+    let feelsLikeDegreesLabel: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.text = "---"
+        view.textAlignment = .center
+        view.font = .boldSystemFont(ofSize: 20)
+        view.textColor = .black
+        view.layer.opacity = 0.9
+        return view
+    }()
+    
+    lazy var feelsLikeStackView: UIStackView = {
+        let view = UIStackView(arrangedSubviews: [feelsLikeLabel, feelsLikeDegrees, feelsLikeDegreesLabel])
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.axis = .horizontal
+        return view
+    }()
+    
     lazy var currentWeatherStackView: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [currentTime, weatherSymbol, temperatureLabel, feelsLikeLabel])
+        let view = UIStackView(arrangedSubviews: [currentTime, weatherSymbol, temperatureLabel, feelsLikeStackView])
         view.translatesAutoresizingMaskIntoConstraints = false
         view.axis = .vertical
         return view
