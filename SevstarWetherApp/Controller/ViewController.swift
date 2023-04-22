@@ -17,19 +17,24 @@ class ViewController: UIViewController {
         let view = HeaderView(fontSize: 20)
         return view
     }()
+    private lazy var currentWeatherView: CurrenWeatherStackView = {
+        let view = CurrenWeatherStackView()
+        return view
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization() // запрашиваем разрешение на получение геоданных
-        locationManager.requestLocation() // запрашиваем геоданные пользователя единоразово
+//        locationManager.delegate = self
+//        locationManager.requestWhenInUseAuthorization() // запрашиваем разрешение на получение геоданных
+//        locationManager.requestLocation() // запрашиваем геоданные пользователя единоразово
         setupView()
         
     }
     func setupView() {
         view.backgroundColor = .white
         view.addSubview(headerView)
+        view.addSubview(currentWeatherView)
 
         setupConstrains()
         
@@ -38,7 +43,13 @@ class ViewController: UIViewController {
         //header
         NSLayoutConstraint.activate([
             headerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10)
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+        ])
+        NSLayoutConstraint.activate([
+            currentWeatherView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            currentWeatherView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            currentWeatherView.topAnchor.constraint(equalTo: view.topAnchor),
+            currentWeatherView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -46,20 +57,20 @@ class ViewController: UIViewController {
 
 
 
-//MARK: - LocationManager
-
-extension ViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.last {
-            locationManager.stopUpdatingLocation()
-            let lat = location.coordinate.latitude
-            let lon = location.coordinate.longitude
-//            weatherManager.fetchWeather(latitude: lat, longitude: lon)
-        }
-    } //получаем данные о местополжении
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print(error)
-    }
-}
+////MARK: - LocationManager
+//
+//extension ViewController: CLLocationManagerDelegate {
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        if let location = locations.last {
+//            locationManager.stopUpdatingLocation()
+//            let lat = location.coordinate.latitude
+//            let lon = location.coordinate.longitude
+////            weatherManager.fetchWeather(latitude: lat, longitude: lon)
+//        }
+//    } //получаем данные о местополжении
+//
+//    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+//        print(error)
+//    }
+//}
 

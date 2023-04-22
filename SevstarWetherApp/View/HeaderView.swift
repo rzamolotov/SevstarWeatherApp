@@ -14,7 +14,7 @@ final class HeaderView: UIView {
     private lazy var headingLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.text = "Погода там где вы есть"
+        view.text = "Cевастополь" //TODO: город прогноза погоды
         view.font = UIFont.boldSystemFont(ofSize: fontSize)
         view.textColor = .black
         view.layer.opacity = 0.9

@@ -19,6 +19,7 @@
 		7673CCE529F3243D00FD1AED /* NetworkManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCE429F3243D00FD1AED /* NetworkManagerProtocol.swift */; };
 		7673CCE929F327D900FD1AED /* Forecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCE829F327D900FD1AED /* Forecast.swift */; };
 		7673CCEC29F3374300FD1AED /* IntExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCEB29F3374300FD1AED /* IntExtention.swift */; };
+		7673CCEE29F3A1E200FD1AED /* CurrenWeatherStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7673CCED29F3A1E200FD1AED /* CurrenWeatherStackView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		7673CCE429F3243D00FD1AED /* NetworkManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerProtocol.swift; sourceTree = "<group>"; };
 		7673CCE829F327D900FD1AED /* Forecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Forecast.swift; sourceTree = "<group>"; };
 		7673CCEB29F3374300FD1AED /* IntExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtention.swift; sourceTree = "<group>"; };
+		7673CCED29F3A1E200FD1AED /* CurrenWeatherStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrenWeatherStackView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 			children = (
 				7673CCE029F317F700FD1AED /* HeaderView.swift */,
 				7673CCE229F319BB00FD1AED /* CurrentWeatherBackgroundView.swift */,
+				7673CCED29F3A1E200FD1AED /* CurrenWeatherStackView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -187,6 +190,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7673CCEE29F3A1E200FD1AED /* CurrenWeatherStackView.swift in Sources */,
 				7673CCDD29F2CBDE00FD1AED /* WeatherManager.swift in Sources */,
 				7673CCE529F3243D00FD1AED /* NetworkManagerProtocol.swift in Sources */,
 				7673CCDB29F2CBAF00FD1AED /* Wether.swift in Sources */,
