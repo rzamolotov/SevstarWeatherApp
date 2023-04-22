@@ -51,6 +51,7 @@ final class HeaderView: UIView {
             headerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             headerStackView.topAnchor.constraint(equalTo: topAnchor)
         ])
+        
     }
     
 }

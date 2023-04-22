@@ -13,7 +13,7 @@ final class CurrenWeatherStackView: UIView {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "-- ------ ----"
-        view.font = .boldSystemFont(ofSize: 20)
+        view.font = .boldSystemFont(ofSize: 15)
         view.textAlignment = .center
         view.textColor = .black
         return view
@@ -25,8 +25,8 @@ final class CurrenWeatherStackView: UIView {
         image.image = UIImage(systemName: "sun.max")
         image.contentMode = .scaleAspectFit
         image.tintColor = .gray
-        image.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 60).isActive = true
         return image
     }()
     
@@ -35,7 +35,7 @@ final class CurrenWeatherStackView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "---"
         view.textAlignment = .center
-        view.font = .boldSystemFont(ofSize: 30)
+        view.font = .boldSystemFont(ofSize: 15)
         return view
     }()
     
@@ -44,7 +44,7 @@ final class CurrenWeatherStackView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "°C"
         view.textAlignment = .center
-        view.font = .boldSystemFont(ofSize: 30)
+        view.font = .boldSystemFont(ofSize: 15)
         return view
     }()
     
@@ -53,7 +53,8 @@ final class CurrenWeatherStackView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "ощущается как"
         view.textAlignment = .center
-        view.font = .boldSystemFont(ofSize: 20)
+        view.font = .boldSystemFont(ofSize: 10)
+        
         view.textColor = .black
         view.layer.opacity = 0.9
         return view
@@ -64,7 +65,7 @@ final class CurrenWeatherStackView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "---"
         view.textAlignment = .center
-        view.font = .boldSystemFont(ofSize: 20)
+        view.font = .boldSystemFont(ofSize: 10)
         view.textColor = .black
         view.layer.opacity = 0.9
         return view
@@ -75,7 +76,7 @@ final class CurrenWeatherStackView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "---"
         view.textAlignment = .center
-        view.font = .boldSystemFont(ofSize: 20)
+        view.font = .boldSystemFont(ofSize: 10)
         view.textColor = .black
         view.layer.opacity = 0.9
         return view
@@ -113,8 +114,8 @@ final class CurrenWeatherStackView: UIView {
     
     func setupConstrains() {
         NSLayoutConstraint.activate([
-            currentWeatherStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            currentWeatherStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            currentWeatherStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+            currentWeatherStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             currentWeatherStackView.topAnchor.constraint(equalTo: topAnchor)
         ])
     }

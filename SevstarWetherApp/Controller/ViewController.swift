@@ -48,10 +48,11 @@ class ViewController: UIViewController {
             headerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
         ])
+        //view
         NSLayoutConstraint.activate([
             currentWeatherView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            currentWeatherView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
-            currentWeatherView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            currentWeatherView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            currentWeatherView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 50)
         ])
     }
     
