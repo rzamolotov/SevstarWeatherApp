@@ -16,7 +16,7 @@ protocol WeatherManagerDelegate {
 
 struct WeatherManager {
     
-    let weatherURL =  "https://api.openweathermap.org/data/2.5/weather?appid=aa819990e915321117e0a69863a72ba3&units=metric"
+    let weatherURL =  "https://api.openweathermap.org/data/2.5/forecast?&appid=aa819990e915321117e0a69863a72ba3&units=metric&lang=RU"
     
     var delegate: WeatherManagerDelegate?
     
@@ -53,18 +53,32 @@ struct WeatherManager {
     }
     
     func parseJSON(_ weatherData: Data) -> WeatherModel? {
-        let decoder = JSONDecoder() // создаем константу декодирования
+        let decoder = JSONDecoder()
         do {
-            let decodedData = try decoder.decode(WeatherData.self, from: weatherData) //выбираем, что декодировать
-            let id = decodedData.weather[0].id
-            let temp = decodedData.main.temp
-            let cityName = decodedData.name
+            let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
+            let cityName = decodedData.city.name
             
-            let weather = WeatherModel(conditionID: id, cityName: cityName, temperature: temp) // создаем объект
-            return weather
+            guard let weather = decodedData.list.first?.weather.first else {
+                return nil // обработка случая, когда массивы list или weather пустые
+            }
+            
+            let conditionID = weather.id
+            let conditionDescription = weather.description
+            
+            guard let main = decodedData.list.first?.main else {
+                return nil // обработка случая, когда массив main пустой
+            }
+            
+            let temperature = decodedData.list[0].main[0].temp
+            let maxTemp = decodedData.list[0].main[0].temp_max
+            let minTemp = decodedData.list[0].main[0].temp_min
+            let fellsLike = decodedData.list[0].main[0].feels_like
+            
+            let weatherModel = WeatherModel(cityName: cityName, conditionID: conditionID, conditionDescription: conditionDescription, temperature: temperature, maxTemp: Int(maxTemp), minTemp: Int(minTemp), fellsLike: Int(fellsLike))
+            return weatherModel
             
         } catch {
-            delegate?.didFailWithError(error: error) // если не получается декодировать данные пишем ошибку
+            delegate?.didFailWithError(error: error)
             return nil
         }
     }
