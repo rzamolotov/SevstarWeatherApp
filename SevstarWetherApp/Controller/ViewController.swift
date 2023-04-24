@@ -46,7 +46,7 @@ class ViewController: UIViewController {
         //header
         NSLayoutConstraint.activate([
             headerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10)
         ])
         //view
         NSLayoutConstraint.activate([
@@ -67,15 +67,16 @@ extension ViewController: WeatherManagerDelegate {
     
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy"
+        dateFormatter.dateFormat = "EEEE, dd.MM.yyyy"
         let currentDate = Date()
         let dateString = dateFormatter.string(from: currentDate)
        
         DispatchQueue.main.async {
-            self.currentWeatherView.temperatureLabel.text = weather.temperatureString
+            self.currentWeatherView.temperatureLabel.text = "\(weather.temperatureString) °C"
             self.currentWeatherView.weatherSymbol.image = UIImage(systemName: weather.conditionName)
             self.headerView.headingLabel.text = weather.cityName
             self.currentWeatherView.currentTime.text = dateString
+            self.currentWeatherView.feelsLikeDegrees.text = "Ощущается как \(String(weather.fellsLike))°C"
         }
     }
     
