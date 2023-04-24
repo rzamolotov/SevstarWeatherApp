@@ -9,27 +9,17 @@ import UIKit
 
 final class HeaderView: UIView {
     
-    private var fontSize: CGFloat
-    
-    lazy var headingLabel: UILabel = {
+    let headingLabel: UILabel = {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "---" //TODO: город прогноза погоды
-        view.font = UIFont.boldSystemFont(ofSize: fontSize)
+        view.font = .boldSystemFont(ofSize: screenHeight * 0.03)
         view.textColor = .black
         view.layer.opacity = 0.9
         return view
     }()
     
-    private lazy var headerStackView: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [headingLabel])
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.axis = .horizontal
-        return view
-    }()
-    
-    init(fontSize: CGFloat) {
-        self.fontSize = fontSize
+    init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         setupView()
@@ -40,16 +30,16 @@ final class HeaderView: UIView {
     }
     
     func setupView() {
-        addSubview(headerStackView)
+        addSubview(headingLabel)
         setupConstrains()
     }
     
     func setupConstrains() {
         //Header
         NSLayoutConstraint.activate([
-            headerStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            headerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            headerStackView.topAnchor.constraint(equalTo: topAnchor)
+            headingLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            headingLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            headingLabel.topAnchor.constraint(equalTo: topAnchor)
         ])
         
     }

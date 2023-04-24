@@ -10,6 +10,7 @@ import CoreLocation
 
 protocol WeatherManagerDelegate {
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel)
+    func didUpdateHourlyForecast(_ weatherManager: WeatherManager, hourlyForecast: [WeatherModel.Hourly])
     func didFailWithError(error: Error)
     
 }
@@ -45,7 +46,9 @@ struct WeatherManager {
                     if let weather = self.parseJSON(safeData) {
                         self.delegate?.didUpdateWeather(self, weather: weather)
                     }
+                    
                 }
+                
             }
             //4. Start the task
             task.resume()
@@ -57,21 +60,36 @@ struct WeatherManager {
         do {
             let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
             
-            let currentDate = decodedData.list[0].dt
+            let currentDate = Date(timeIntervalSince1970: decodedData.list[0].dt)
             let cityName = decodedData.city.name
             let conditionID = decodedData.list[0].weather[0].id
-            let conditionDescription = decodedData.list[0].weather[0].description
+            let conditionDescription = decodedData.list[0].weather.description
             let temperature = decodedData.list[0].main.temp
             let maxTemp = decodedData.list[0].main.temp_max
             let minTemp = decodedData.list[0].main.temp_min
             let fellsLike = decodedData.list[0].main.feels_like
             
             let weatherModel = WeatherModel(cityName: cityName, conditionID: conditionID, conditionDescription: conditionDescription, currentDate: currentDate, temperature: temperature, maxTemp: Int(maxTemp), minTemp: Int(minTemp), fellsLike: Int(fellsLike))
-            return weatherModel
             
+            if let hourlyList = parseHourlyJSON(decodedData.list) {
+                self.delegate?.didUpdateHourlyForecast(self, hourlyForecast: hourlyList)
+            }
+            return weatherModel
         } catch {
             delegate?.didFailWithError(error: error)
             return nil
         }
     }
+    
+    func parseHourlyJSON(_ list: [List]) -> [WeatherModel.Hourly]? {
+        let hourlyList = list.map { item -> WeatherModel.Hourly in
+            let date = Date(timeIntervalSince1970: item.dt)
+            let temperature = item.main.temp
+            let conditionID = item.weather.first?.id ?? 0
+            let description = item.weather.first?.description ?? ""
+            return WeatherModel.Hourly(dt: date, temp: Int(temperature), description: description, conditionID: conditionID)
+        }
+        return hourlyList
+    }
+    
 }
