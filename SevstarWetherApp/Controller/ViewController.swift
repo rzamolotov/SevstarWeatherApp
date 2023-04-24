@@ -66,10 +66,16 @@ class ViewController: UIViewController {
 extension ViewController: WeatherManagerDelegate {
     
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy"
+        let currentDate = Date()
+        let dateString = dateFormatter.string(from: currentDate)
+       
         DispatchQueue.main.async {
             self.currentWeatherView.temperatureLabel.text = weather.temperatureString
             self.currentWeatherView.weatherSymbol.image = UIImage(systemName: weather.conditionName)
             self.headerView.headingLabel.text = weather.cityName
+            self.currentWeatherView.currentTime.text = dateString
         }
     }
     

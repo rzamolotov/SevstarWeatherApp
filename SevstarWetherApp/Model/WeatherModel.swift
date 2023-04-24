@@ -13,6 +13,7 @@ struct WeatherModel {
     
     let conditionID: Int
     let conditionDescription: String
+    let currentDate: Date
     
     let temperature: Double
     let maxTemp: Int

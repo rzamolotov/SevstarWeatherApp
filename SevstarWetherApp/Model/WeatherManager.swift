@@ -56,25 +56,17 @@ struct WeatherManager {
         let decoder = JSONDecoder()
         do {
             let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
+            
+            let currentDate = decodedData.list[0].dt
             let cityName = decodedData.city.name
+            let conditionID = decodedData.list[0].weather[0].id
+            let conditionDescription = decodedData.list[0].weather[0].description
+            let temperature = decodedData.list[0].main.temp
+            let maxTemp = decodedData.list[0].main.temp_max
+            let minTemp = decodedData.list[0].main.temp_min
+            let fellsLike = decodedData.list[0].main.feels_like
             
-            guard let weather = decodedData.list.first?.weather.first else {
-                return nil // обработка случая, когда массивы list или weather пустые
-            }
-            
-            let conditionID = weather.id
-            let conditionDescription = weather.description
-            
-            guard let main = decodedData.list.first?.main else {
-                return nil // обработка случая, когда массив main пустой
-            }
-            
-            let temperature = decodedData.list[0].main[0].temp
-            let maxTemp = decodedData.list[0].main[0].temp_max
-            let minTemp = decodedData.list[0].main[0].temp_min
-            let fellsLike = decodedData.list[0].main[0].feels_like
-            
-            let weatherModel = WeatherModel(cityName: cityName, conditionID: conditionID, conditionDescription: conditionDescription, temperature: temperature, maxTemp: Int(maxTemp), minTemp: Int(minTemp), fellsLike: Int(fellsLike))
+            let weatherModel = WeatherModel(cityName: cityName, conditionID: conditionID, conditionDescription: conditionDescription, currentDate: currentDate, temperature: temperature, maxTemp: Int(maxTemp), minTemp: Int(minTemp), fellsLike: Int(fellsLike))
             return weatherModel
             
         } catch {

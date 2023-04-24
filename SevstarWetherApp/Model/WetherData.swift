@@ -8,19 +8,21 @@
 import Foundation
 
 struct WeatherData: Codable {
-    let name: String
     let city: CityName
     let list: [List]
 }
 
 struct List: Codable {
     let dt: Date
-    let main: [Main]
+    let main: Main
     let weather: [Weather]
 }
 
 struct Main: Codable {
-    let temp, feels_like, temp_min, temp_max: Double
+    let temp: Double
+    let feels_like: Double
+    let temp_min: Double
+    let temp_max: Double
 }
 
 struct Weather: Codable {
@@ -31,3 +33,4 @@ struct Weather: Codable {
 struct CityName: Codable {
     let name: String
 }
+

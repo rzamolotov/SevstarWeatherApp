@@ -15,7 +15,7 @@ final class CurrenWeatherStackView: UIView {
         view.text = "-- ------ ----"
         view.font = .boldSystemFont(ofSize: 15)
         view.textAlignment = .center
-        view.textColor = .black
+        view.textColor = .white
         return view
     }()
     
@@ -24,7 +24,7 @@ final class CurrenWeatherStackView: UIView {
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(systemName: "sun.max")
         image.contentMode = .scaleAspectFit
-        image.tintColor = .gray
+        image.tintColor = .white
         image.widthAnchor.constraint(equalToConstant: 300).isActive = true
         image.heightAnchor.constraint(equalToConstant: 60).isActive = true
         return image
@@ -35,6 +35,7 @@ final class CurrenWeatherStackView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "---"
         view.textAlignment = .center
+        view.textColor = .white
         view.font = .boldSystemFont(ofSize: 15)
         return view
     }()
@@ -44,6 +45,7 @@ final class CurrenWeatherStackView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "°C"
         view.textAlignment = .center
+        view.textColor = .white
         view.font = .boldSystemFont(ofSize: 15)
         return view
     }()
@@ -54,8 +56,7 @@ final class CurrenWeatherStackView: UIView {
         view.text = "ощущается как"
         view.textAlignment = .center
         view.font = .boldSystemFont(ofSize: 10)
-        
-        view.textColor = .black
+        view.textColor = .white
         view.layer.opacity = 0.9
         return view
     }()
@@ -66,7 +67,7 @@ final class CurrenWeatherStackView: UIView {
         view.text = "---"
         view.textAlignment = .center
         view.font = .boldSystemFont(ofSize: 10)
-        view.textColor = .black
+        view.textColor = .white
         view.layer.opacity = 0.9
         return view
     }()
@@ -77,7 +78,7 @@ final class CurrenWeatherStackView: UIView {
         view.text = "---"
         view.textAlignment = .center
         view.font = .boldSystemFont(ofSize: 10)
-        view.textColor = .black
+        view.textColor = .white
         view.layer.opacity = 0.9
         return view
     }()
@@ -108,15 +109,29 @@ final class CurrenWeatherStackView: UIView {
     
     
     func setupView() {
-        addSubview(currentWeatherStackView)
-        setupConstrains()
-    }
-    
-    func setupConstrains() {
+        let backgroundImage = UIImage(named: "weatherBackgroundImage")
+        let backgroundImageView = UIImageView(image: backgroundImage)
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.layer.cornerRadius = 15
+        backgroundImageView.layer.masksToBounds = true
+        addSubview(backgroundImageView)
+
+        // Add constraints to the background image view
         NSLayoutConstraint.activate([
-            currentWeatherStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            currentWeatherStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            currentWeatherStackView.topAnchor.constraint(equalTo: topAnchor)
+            backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
+            backgroundImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
+            backgroundImageView.topAnchor.constraint(equalTo: topAnchor, constant: 15),
+            backgroundImageView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height / 4)
         ])
+
+        // Add currentWeatherStackView as subview of backgroundImageView
+        backgroundImageView.addSubview(currentWeatherStackView)
+
+        // Add constraints to currentWeatherStackView
+        currentWeatherStackView.leadingAnchor.constraint(equalTo: backgroundImageView.leadingAnchor, constant: 15).isActive = true
+        currentWeatherStackView.trailingAnchor.constraint(equalTo: backgroundImageView.trailingAnchor, constant: -15).isActive = true
+        currentWeatherStackView.topAnchor.constraint(equalTo: backgroundImageView.topAnchor, constant: 15).isActive = true
+        currentWeatherStackView.bottomAnchor.constraint(equalTo: backgroundImageView.bottomAnchor, constant: -15).isActive = true
     }
 }
