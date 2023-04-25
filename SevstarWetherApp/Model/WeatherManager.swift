@@ -20,15 +20,15 @@ struct WeatherManager {
     
     var delegate: WeatherManagerDelegate?
     
-    func fetchWeather(cityName: String) {
-        let urlString = "\(weatherURL)&q=\(cityName)"
-        performRequest(with: urlString)
-    } // получаем название города для того чтобы добватьб его в урл
-    
     func fetchWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
         let  urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
         performRequest(with: urlString)
     } //получаем урл из широты и долготы
+    
+    func fetchHourlyForecast(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
+        let  urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
+        performRequest(with: urlString)
+    } //получаем урл для почасового прогноза из широты и долготы
     
     func performRequest(with urlString: String) {
         //1. Create a URL
@@ -62,7 +62,7 @@ struct WeatherManager {
             let currentDate = Date(timeIntervalSince1970: decodedData.list[0].dt)
             let cityName = decodedData.city.name
             let conditionID = decodedData.list[0].weather[0].id
-            let conditionDescription = decodedData.list[0].weather.description
+            let conditionDescription = decodedData.list[0].weather[0].description
             let temperature = decodedData.list[0].main.temp
             let maxTemp = decodedData.list[0].main.temp_max
             let minTemp = decodedData.list[0].main.temp_min
@@ -71,7 +71,9 @@ struct WeatherManager {
             let weatherModel = WeatherModel(cityName: cityName, conditionID: conditionID, conditionDescription: conditionDescription, currentDate: currentDate, temperature: temperature, maxTemp: Int(maxTemp), minTemp: Int(minTemp), fellsLike: Int(fellsLike))
             
             if let hourlyList = parseHourlyJSON(decodedData.list) {
-                self.delegate?.didUpdateHourlyForecast(self, hourlyForecast: hourlyList)
+                DispatchQueue.main.async {
+                    self.delegate?.didUpdateHourlyForecast(self, hourlyForecast: hourlyList)
+                }
             }
             return weatherModel
         } catch {
@@ -81,14 +83,13 @@ struct WeatherManager {
     }
     
     func parseHourlyJSON(_ list: [List]) -> [WeatherModel.Hourly]? {
-        let hourlyList = list.map { item -> WeatherModel.Hourly in
-            let date = Date(timeIntervalSince1970: item.dt)
-            let temperature = item.main.temp
-            let conditionID = item.weather.first?.id ?? 0
-            let description = item.weather.first?.description ?? ""
+        let hourlyList = list.map { hourly -> WeatherModel.Hourly in
+            let date = Date(timeIntervalSince1970: hourly.dt)
+            let temperature = hourly.main.temp
+            let conditionID = hourly.weather.first?.id ?? 0
+            let description = hourly.weather.first?.description ?? ""
             return WeatherModel.Hourly(dt: date, temp: Int(temperature), description: description, conditionID: conditionID)
         }
         return hourlyList
     }
-    
 }

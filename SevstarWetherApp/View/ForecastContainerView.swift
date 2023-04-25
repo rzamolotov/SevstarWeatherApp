@@ -12,7 +12,7 @@ class ForecastContainerView: UIView {
     let containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 10
+        view.layer.cornerRadius = 15
         view.layer.masksToBounds = true
         view.backgroundColor = .gray.withAlphaComponent(0.1)
         return view
@@ -65,7 +65,6 @@ class ForecastContainerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     func setupView() {
         addSubview(containerView)
         setupConstraints()
@@ -73,8 +72,6 @@ class ForecastContainerView: UIView {
     
     func setupConstraints() {
         let forecastViewCell = ForecastViewCell()
-        
-        
         containerView.addSubview(dateTitleLabel)
         containerView.addSubview(lineView)
         containerView.addSubview(dateForecast)

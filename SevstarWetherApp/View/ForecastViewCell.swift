@@ -82,17 +82,16 @@ class ForecastViewCell: UITableViewCell, UITableViewDataSource {
     }
     
     func setupConstraints() {
-        //Header
         NSLayoutConstraint.activate([
             //dateLabel
             dateLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             dateLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             dateLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: screenHeight * 0.008),
-            
+            //weatherSymbol
             weatherSymbol.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             weatherSymbol.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             weatherSymbol.topAnchor.constraint(equalTo: dateLabel.topAnchor, constant: (screenHeight * 0.15) / 3 / 1.1) ,
-            
+            //tempLabel
             tempLabel.topAnchor.constraint(equalTo: weatherSymbol.bottomAnchor, constant: screenHeight * 0.01),
             tempLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             tempLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
@@ -110,14 +109,11 @@ class ForecastViewCell: UITableViewCell, UITableViewDataSource {
         dateFormatter.dateFormat = "HH:00"
         let currentDate = Date()
         let dateString = dateFormatter.string(from: currentDate)
-
         let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell", for: indexPath) as! ForecastViewCell
-
         let hourly = hourlyForecast[indexPath.row]
         cell.dateLabel.text = dateString
         cell.weatherSymbol.image = UIImage(systemName: hourly.conditionName)
         cell.tempLabel.text = "\(hourly.temp) °C"
-
         return cell
     }
 }

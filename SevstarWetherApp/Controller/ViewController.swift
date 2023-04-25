@@ -14,50 +14,53 @@ class ViewController: UIViewController {
     private let locationManager = CLLocationManager()
     private let headerView = HeaderView()
     private let currentWeatherView = CurrenWeatherStackView()
-    private let forecastViewCell = ForecastViewCell()
     private let forecatsContainerView = ForecastContainerView()
     private let tableView = UITableView()
+    private let detailVC = DetailViewController()
     var hourlyForecast: [WeatherModel.Hourly] = []
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization() // запрашиваем разрешение на получение геоданных
         locationManager.requestLocation() // запрашиваем геоданные пользователя единоразово
+        navigationController?.navigationBar.isHidden = true
         weatherManager.delegate = self
-        
-        
         setupView()
-        setupTableView()
-        
-    }
-    func setupTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(ForecastViewCell.self, forCellReuseIdentifier: "ForecastCell")
-        view.addSubview(tableView)
     }
     
     func setupView() {
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.reloadData()
+        tableView.register(ForecastViewCell.self, forCellReuseIdentifier: "ForecastCell")
+        
+      
+        
+        view.addSubview(tableView)
         view.backgroundColor = .white
         view.addSubview(headerView)
         view.addSubview(currentWeatherView)
         view.addSubview(forecatsContainerView)
-        
         setupConstrains()
-        
     }
+    
+    @objc private func didTapDetail() {
+        detailVC.modalPresentationStyle = .formSheet
+        self.present(detailVC, animated: true, completion: nil)
+    }
+    
     func  setupConstrains() {
         let containerView = UIView()
         view.addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
-
         containerView.addSubview(headerView)
         containerView.addSubview(currentWeatherView)
         containerView.addSubview(forecatsContainerView)
-
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDetail))
+        containerView.addGestureRecognizer(tapGesture)
+        
         NSLayoutConstraint.activate([
             //containerView
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -84,12 +87,10 @@ class ViewController: UIViewController {
 
 extension ViewController: WeatherManagerDelegate {
     func didUpdateHourlyForecast(_ weatherManager: WeatherManager, hourlyForecast: [WeatherModel.Hourly]) {
-        forecastViewCell.hourlyForecast = hourlyForecast
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
-    
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "Сегодня EEEE, dd.MM.yyyy"
@@ -120,13 +121,14 @@ extension ViewController: CLLocationManagerDelegate {
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
             weatherManager.fetchWeather(latitude: lat, longitude: lon)
+            weatherManager.fetchHourlyForecast(latitude: lat, longitude: lon)
         }
     }
-    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
     }
 }
+
 //MARK: - TableViewDelegate
 
 extension ViewController: UITableViewDataSource {
@@ -137,16 +139,10 @@ extension ViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell", for: indexPath) as! ForecastViewCell
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:00"
-        let currentDate = Date()
-        let dateString = dateFormatter.string(from: currentDate)
-        
         let hourly = hourlyForecast[indexPath.row]
-        cell.dateLabel.text = dateString
+        cell.dateLabel.text = hourly.dateString
         cell.weatherSymbol.image = UIImage(systemName: hourly.conditionName)
         cell.tempLabel.text = "\(hourly.temp) °C"
-        
         return cell
     }
 }

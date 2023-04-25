@@ -1,13 +1,14 @@
 //
-//  CurrenWeatherStack.swift
+//  CurrentWeatherDetailView.swift
 //  SevstarWetherApp
 //
-//  Created by Роман Замолотов on 22.04.2023.
+//  Created by Роман Замолотов on 25.04.2023.
 //
 
+import Foundation
 import UIKit
 
-class CurrenWeatherStackView: UIView {
+class CurrentWeatherDetailView: UIView {
     
     let currentTime: UILabel = {
         let view = UILabel()
@@ -15,7 +16,7 @@ class CurrenWeatherStackView: UIView {
         view.text = "-- ------ ----"
         view.font = .systemFont(ofSize: CGFloat(screenHeight * 0.025))
         view.textAlignment = .center
-        view.textColor = .white
+        view.textColor = .black
         view.layer.opacity = 0.9
         return view
     }()
@@ -24,7 +25,7 @@ class CurrenWeatherStackView: UIView {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.image = UIImage(systemName: "sun.max")
-        image.tintColor = .white
+        image.tintColor = .black
         image.contentMode = .scaleAspectFit
         image.widthAnchor.constraint(equalToConstant: CGFloat(screenWidth * 0.3)).isActive = true
         image.heightAnchor.constraint(equalToConstant: CGFloat(screenHeight * 0.2)).isActive = true
@@ -37,7 +38,7 @@ class CurrenWeatherStackView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.text = "---"
         view.textAlignment = .center
-        view.textColor = .white
+        view.textColor = .black
         view.font = .systemFont(ofSize: CGFloat(screenHeight * 0.07))
         view.layer.opacity = 0.9
         return view
@@ -49,7 +50,7 @@ class CurrenWeatherStackView: UIView {
         view.text = "---"
         view.font = .systemFont(ofSize: CGFloat(screenHeight * 0.02))
         view.textAlignment = .center
-        view.textColor = .white
+        view.textColor = .black
         view.layer.opacity = 0.9
         return view
     }()
@@ -75,8 +76,8 @@ class CurrenWeatherStackView: UIView {
         addSubview(backgroundImageView)
         
         NSLayoutConstraint.activate([
-            backgroundImageView.widthAnchor.constraint(equalToConstant: screenWidth * 0.95),
-            backgroundImageView.heightAnchor.constraint(equalToConstant: screenHeight * 0.35)
+            backgroundImageView.widthAnchor.constraint(equalToConstant: screenWidth),
+            backgroundImageView.heightAnchor.constraint(equalToConstant: screenHeight)
         ])
         
         backgroundImageView.addSubview(currentTime)
@@ -88,7 +89,7 @@ class CurrenWeatherStackView: UIView {
             // currentWeatherStackView
             currentTime.leadingAnchor.constraint(equalTo: leadingAnchor),
             currentTime.trailingAnchor.constraint(equalTo: trailingAnchor),
-            currentTime.topAnchor.constraint(equalTo: backgroundImageView.topAnchor, constant: screenHeight * 0.001),
+            currentTime.topAnchor.constraint(equalTo: backgroundImageView.topAnchor, constant: screenHeight * 0.1),
             
             // weatherSymbol
             weatherSymbol.centerXAnchor.constraint(equalTo: centerXAnchor),

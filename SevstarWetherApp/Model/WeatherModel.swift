@@ -43,6 +43,7 @@ struct WeatherModel {
             return "cloud"
         }
     }
+    
     struct Hourly {
         var dt: Date
         let temp: Int
@@ -65,6 +66,12 @@ struct WeatherModel {
             default:
                 return "cloud"
             }
+        }
+        var dateString: String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "'Сегодня' EEEE, dd.MM.yyyy"
+            let dateString = dateFormatter.string(from: dt)
+            return dateString
         }
     }
 }
