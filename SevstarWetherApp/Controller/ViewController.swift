@@ -15,6 +15,9 @@ class ViewController: UIViewController {
     private let headerView = HeaderView()
     private let currentWeatherView = CurrenWeatherStackView()
     private let forecastViewCell = ForecastViewCell()
+    private let forecatsContainerView = ForecastContainerView()
+    private let tableView = UITableView()
+    var hourlyForecast: [WeatherModel.Hourly] = []
     
     
     override func viewDidLoad() {
@@ -24,39 +27,55 @@ class ViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization() // запрашиваем разрешение на получение геоданных
         locationManager.requestLocation() // запрашиваем геоданные пользователя единоразово
         weatherManager.delegate = self
+        
+        
         setupView()
+        setupTableView()
         
     }
+    func setupTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(ForecastViewCell.self, forCellReuseIdentifier: "ForecastCell")
+        view.addSubview(tableView)
+    }
+    
     func setupView() {
         view.backgroundColor = .white
         view.addSubview(headerView)
         view.addSubview(currentWeatherView)
-        view.addSubview(forecastViewCell)
+        view.addSubview(forecatsContainerView)
         
         setupConstrains()
         
     }
     func  setupConstrains() {
-        
-        forecastViewCell.tableView.dataSource = forecastViewCell
-        forecastViewCell.tableView.delegate = self
-        forecastViewCell.tableView.rowHeight = screenHeight * 0.07
-        forecastViewCell.tableView.translatesAutoresizingMaskIntoConstraints = false
-        
+        let containerView = UIView()
+        view.addSubview(containerView)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+
+        containerView.addSubview(headerView)
+        containerView.addSubview(currentWeatherView)
+        containerView.addSubview(forecatsContainerView)
+
         NSLayoutConstraint.activate([
-            //header
-            headerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: screenHeight * 0.015),
+            //containerView
+            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            //headerView
+            headerView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            headerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: screenHeight * 0.015),
             //currentWeatherView
-            currentWeatherView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: screenHeight * 0.01),
-            currentWeatherView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -(screenHeight * 0.01)),
+            currentWeatherView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: screenHeight * 0.01),
+            currentWeatherView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -(screenHeight * 0.01)),
             currentWeatherView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: screenHeight * 0.07),
             currentWeatherView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor),
             //forecastViewCell
-            forecastViewCell.tableView.topAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: screenHeight * 0.3),
-            forecastViewCell.tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: screenHeight * 0.01),
-            forecastViewCell.tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -(screenHeight * 0.01)),
-            forecastViewCell.tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            forecatsContainerView.topAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: screenHeight * 0.4),
+            forecatsContainerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: screenHeight * 0.01),
+            forecatsContainerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -(screenHeight * 0.01)),
         ])
     }
 }
@@ -65,17 +84,9 @@ class ViewController: UIViewController {
 
 extension ViewController: WeatherManagerDelegate {
     func didUpdateHourlyForecast(_ weatherManager: WeatherManager, hourlyForecast: [WeatherModel.Hourly]) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:00"
-        let currentDate = Date()
-        let dateString = dateFormatter.string(from: currentDate)
-        
+        forecastViewCell.hourlyForecast = hourlyForecast
         DispatchQueue.main.async {
-            self.forecastViewCell.tableView.reloadData()
-            self.forecastViewCell.dateLabel.text = dateString
-            self.forecastViewCell.weatherSymbol.image = UIImage(systemName: hourlyForecast[0].conditionName)
-            self.forecastViewCell.tempLabel.text = "\(hourlyForecast[0].temp) °C"
-            
+            self.tableView.reloadData()
         }
     }
     
@@ -118,8 +129,33 @@ extension ViewController: CLLocationManagerDelegate {
 }
 //MARK: - TableViewDelegate
 
+extension ViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return hourlyForecast.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell", for: indexPath) as! ForecastViewCell
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:00"
+        let currentDate = Date()
+        let dateString = dateFormatter.string(from: currentDate)
+        
+        let hourly = hourlyForecast[indexPath.row]
+        cell.dateLabel.text = dateString
+        cell.weatherSymbol.image = UIImage(systemName: hourly.conditionName)
+        cell.tempLabel.text = "\(hourly.temp) °C"
+        
+        return cell
+    }
+}
+
 extension ViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return screenHeight * 0.07
     }
 }
+
+

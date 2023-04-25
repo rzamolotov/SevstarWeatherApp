@@ -9,14 +9,16 @@ import Foundation
 import UIKit
 
 class ForecastViewCell: UITableViewCell, UITableViewDataSource {
+    
     var hourlyForecast: [WeatherModel.Hourly] = []
+    let tableView = UITableView()
     
     let containerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
-        view.backgroundColor = .gray.withAlphaComponent(0.4)
+        view.backgroundColor = .gray.withAlphaComponent(0.1)
         return view
     }()
     
@@ -53,6 +55,7 @@ class ForecastViewCell: UITableViewCell, UITableViewDataSource {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         translatesAutoresizingMaskIntoConstraints = false
+        
         setupView()
     }
     
@@ -60,29 +63,12 @@ class ForecastViewCell: UITableViewCell, UITableViewDataSource {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return hourlyForecast.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "forecastCell", for: indexPath) as! ForecastViewCell
-        
-        let hourly = hourlyForecast[indexPath.row]
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:00"
-        let dateString = dateFormatter.string(from: hourly.dt)
-        cell.dateLabel.text = dateString
-        cell.weatherSymbol.image = UIImage(systemName: hourly.conditionName)
-        cell.tempLabel.text = "\(hourly.temp) °C"
-        
-        return cell
-    }
-    
     func setupView() {
         addSubview(containerView)
         containerView.addSubview(dateLabel)
         containerView.addSubview(weatherSymbol)
         containerView.addSubview(tempLabel)
+        
         setupConstraints()
         
         NSLayoutConstraint.activate([
@@ -105,7 +91,7 @@ class ForecastViewCell: UITableViewCell, UITableViewDataSource {
             
             weatherSymbol.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             weatherSymbol.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            weatherSymbol.topAnchor.constraint(equalTo: dateLabel.topAnchor, constant: (screenHeight * 0.15) / 3) ,
+            weatherSymbol.topAnchor.constraint(equalTo: dateLabel.topAnchor, constant: (screenHeight * 0.15) / 3 / 1.1) ,
             
             tempLabel.topAnchor.constraint(equalTo: weatherSymbol.bottomAnchor, constant: screenHeight * 0.01),
             tempLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
@@ -114,4 +100,30 @@ class ForecastViewCell: UITableViewCell, UITableViewDataSource {
         ])
     }
     
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return hourlyForecast.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:00"
+        let currentDate = Date()
+        let dateString = dateFormatter.string(from: currentDate)
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell", for: indexPath) as! ForecastViewCell
+
+        let hourly = hourlyForecast[indexPath.row]
+        cell.dateLabel.text = dateString
+        cell.weatherSymbol.image = UIImage(systemName: hourly.conditionName)
+        cell.tempLabel.text = "\(hourly.temp) °C"
+
+        return cell
+    }
+}
+
+extension ForecastViewCell: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return screenHeight * 0.07
+    }
 }

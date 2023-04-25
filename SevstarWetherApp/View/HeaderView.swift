@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class HeaderView: UIView {
+class HeaderView: UIView {
     
     let headingLabel: UILabel = {
         let view = UILabel()
@@ -41,7 +41,5 @@ final class HeaderView: UIView {
             headingLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             headingLabel.topAnchor.constraint(equalTo: topAnchor)
         ])
-        
     }
-    
 }

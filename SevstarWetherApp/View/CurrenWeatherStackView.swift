@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class CurrenWeatherStackView: UIView {
+class CurrenWeatherStackView: UIView {
     
     let currentTime: UILabel = {
         let view = UILabel()
@@ -26,8 +26,8 @@ final class CurrenWeatherStackView: UIView {
         image.image = UIImage(systemName: "sun.max")
         image.tintColor = .white
         image.contentMode = .scaleAspectFit
-        image.widthAnchor.constraint(equalToConstant: CGFloat(screenWidth * 0.25)).isActive = true
-        image.heightAnchor.constraint(equalToConstant: CGFloat(screenHeight * 0.12)).isActive = true
+        image.widthAnchor.constraint(equalToConstant: CGFloat(screenWidth * 0.3)).isActive = true
+        image.heightAnchor.constraint(equalToConstant: CGFloat(screenHeight * 0.2)).isActive = true
         image.layer.opacity = 0.9
         return image
     }()
@@ -38,7 +38,7 @@ final class CurrenWeatherStackView: UIView {
         view.text = "---"
         view.textAlignment = .center
         view.textColor = .white
-        view.font = .systemFont(ofSize: CGFloat(screenHeight * 0.04))
+        view.font = .systemFont(ofSize: CGFloat(screenHeight * 0.07))
         view.layer.opacity = 0.9
         return view
     }()
@@ -74,11 +74,9 @@ final class CurrenWeatherStackView: UIView {
         backgroundImageView.layer.masksToBounds = true
         addSubview(backgroundImageView)
         
-        // Add constraints to the background image view
         NSLayoutConstraint.activate([
             backgroundImageView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width * 0.95),
-            backgroundImageView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.25)
-            
+            backgroundImageView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height * 0.35)
         ])
         
         backgroundImageView.addSubview(currentTime)
@@ -94,17 +92,17 @@ final class CurrenWeatherStackView: UIView {
             
             // weatherSymbol
             weatherSymbol.centerXAnchor.constraint(equalTo: centerXAnchor),
-            weatherSymbol.topAnchor.constraint(equalTo: currentTime.bottomAnchor, constant: UIScreen.main.bounds.height * 0.01),
+            weatherSymbol.topAnchor.constraint(equalTo: currentTime.bottomAnchor, constant: UIScreen.main.bounds.height * 0.003),
             
             // temperatureLabel
             temperatureLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             temperatureLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            temperatureLabel.topAnchor.constraint(equalTo: weatherSymbol.bottomAnchor, constant: UIScreen.main.bounds.height * 0.005),
+            temperatureLabel.topAnchor.constraint(equalTo: weatherSymbol.bottomAnchor, constant: UIScreen.main.bounds.height * 0.003),
             
             // currentWeatherStackView
             feelsLikeDegrees.leadingAnchor.constraint(equalTo: leadingAnchor),
             feelsLikeDegrees.trailingAnchor.constraint(equalTo: trailingAnchor),
-            feelsLikeDegrees.topAnchor.constraint(equalTo: temperatureLabel.bottomAnchor,  constant: UIScreen.main.bounds.height * 0.005)
+            feelsLikeDegrees.topAnchor.constraint(equalTo: temperatureLabel.bottomAnchor,  constant: UIScreen.main.bounds.height * 0.003)
         ])
     }
 }
