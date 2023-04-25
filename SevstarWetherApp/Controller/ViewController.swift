@@ -11,20 +11,10 @@ import CoreLocation
 class ViewController: UIViewController {
     
     var weatherManager = WeatherManager()
-    var locationManager = CLLocationManager()
-    
-    private lazy var headerView: HeaderView = {
-        let view = HeaderView()
-        return view
-    }()
-    private lazy var currentWeatherView: CurrenWeatherStackView = {
-        let view = CurrenWeatherStackView()
-        return view
-    }()
-    private lazy var hourlyCollectionViewCell: HourlyCollectionViewCell = {
-        let view = HourlyCollectionViewCell()
-        return view
-    }()
+    private let locationManager = CLLocationManager()
+    private let headerView = HeaderView()
+    private let currentWeatherView = CurrenWeatherStackView()
+    private let forecastViewCell = ForecastViewCell()
     
     
     override func viewDidLoad() {
@@ -33,9 +23,7 @@ class ViewController: UIViewController {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization() // запрашиваем разрешение на получение геоданных
         locationManager.requestLocation() // запрашиваем геоданные пользователя единоразово
-        
         weatherManager.delegate = self
-
         setupView()
         
     }
@@ -43,50 +31,49 @@ class ViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(headerView)
         view.addSubview(currentWeatherView)
-        view.addSubview(hourlyCollectionViewCell)
+        view.addSubview(forecastViewCell)
         
         setupConstrains()
         
     }
     func  setupConstrains() {
-        
         NSLayoutConstraint.activate([
             //header
             headerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: screenHeight * 0.015),
             //currentWeatherView
-            currentWeatherView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            currentWeatherView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            currentWeatherView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 30),
+            currentWeatherView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: screenHeight * 0.01),
+            currentWeatherView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -(screenHeight * 0.01)),
+            currentWeatherView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: screenHeight * 0.07),
             currentWeatherView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor),
-            //hourlyCollectionView
-            hourlyCollectionViewCell.topAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: 10),
-            hourlyCollectionViewCell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            hourlyCollectionViewCell.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            
+            //forecastViewCell
+            forecastViewCell.topAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: screenHeight * 0.3),
+            forecastViewCell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: screenHeight * 0.01),
+            forecastViewCell.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -(screenHeight * 0.01)),
         ])
     }
-    
 }
-
-
-
 
 //MARK: - WeatherManagerDelegate
 
 extension ViewController: WeatherManagerDelegate {
     func didUpdateHourlyForecast(_ weatherManager: WeatherManager, hourlyForecast: [WeatherModel.Hourly]) {
-     
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:00"
+        let currentDate = Date()
+        let dateString = dateFormatter.string(from: currentDate)
+        
         DispatchQueue.main.async {
-            self.hourlyCollectionViewCell.weatherSymbol.image = UIImage(systemName: hourlyForecast[0].conditionName)
-           
+            self.forecastViewCell.dateLabel.text = dateString
+            self.forecastViewCell.weatherSymbol.image = UIImage(systemName: hourlyForecast[0].conditionName)
+            self.forecastViewCell.tempLabel.text = "\(hourlyForecast[0].temp) °C"
+            
         }
     }
     
-    
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE, dd.MM.yyyy"
+        dateFormatter.dateFormat = "Сегодня EEEE, dd.MM.yyyy"
         let currentDate = Date()
         let dateString = dateFormatter.string(from: currentDate)
         
@@ -121,4 +108,3 @@ extension ViewController: CLLocationManagerDelegate {
         print(error)
     }
 }
-
