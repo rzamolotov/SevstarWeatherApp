@@ -62,7 +62,7 @@ class ViewController: UIViewController {
             currentWeatherView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: screenHeight * 0.07),
             currentWeatherView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor),
             //forecastViewCell
-            forecatsContainerView.topAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: screenHeight * 0.4),
+            forecatsContainerView.topAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: screenHeight * 0.05),
             forecatsContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: screenHeight * 0.01),
             forecatsContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -(screenHeight * 0.01)),
         ])
