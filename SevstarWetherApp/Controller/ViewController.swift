@@ -37,6 +37,12 @@ class ViewController: UIViewController {
         
     }
     func  setupConstrains() {
+        
+        forecastViewCell.tableView.dataSource = forecastViewCell
+        forecastViewCell.tableView.delegate = self
+        forecastViewCell.tableView.rowHeight = screenHeight * 0.07
+        forecastViewCell.tableView.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             //header
             headerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -47,9 +53,10 @@ class ViewController: UIViewController {
             currentWeatherView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: screenHeight * 0.07),
             currentWeatherView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor),
             //forecastViewCell
-            forecastViewCell.topAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: screenHeight * 0.3),
-            forecastViewCell.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: screenHeight * 0.01),
-            forecastViewCell.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -(screenHeight * 0.01)),
+            forecastViewCell.tableView.topAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: screenHeight * 0.3),
+            forecastViewCell.tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: screenHeight * 0.01),
+            forecastViewCell.tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -(screenHeight * 0.01)),
+            forecastViewCell.tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }
@@ -64,6 +71,7 @@ extension ViewController: WeatherManagerDelegate {
         let dateString = dateFormatter.string(from: currentDate)
         
         DispatchQueue.main.async {
+            self.forecastViewCell.tableView.reloadData()
             self.forecastViewCell.dateLabel.text = dateString
             self.forecastViewCell.weatherSymbol.image = UIImage(systemName: hourlyForecast[0].conditionName)
             self.forecastViewCell.tempLabel.text = "\(hourlyForecast[0].temp) °C"
@@ -106,5 +114,12 @@ extension ViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
+    }
+}
+//MARK: - TableViewDelegate
+
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return screenHeight * 0.07
     }
 }

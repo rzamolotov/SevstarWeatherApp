@@ -8,7 +8,8 @@
 import Foundation
 import UIKit
 
-final class ForecastViewCell: UITableViewCell {
+class ForecastViewCell: UITableViewCell, UITableViewDataSource {
+    var hourlyForecast: [WeatherModel.Hourly] = []
     
     let containerView: UIView = {
         let view = UIView()
@@ -50,13 +51,31 @@ final class ForecastViewCell: UITableViewCell {
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-         super.init(style: style, reuseIdentifier: reuseIdentifier)
-         translatesAutoresizingMaskIntoConstraints = false
-         setupView()
-     }
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        translatesAutoresizingMaskIntoConstraints = false
+        setupView()
+    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return hourlyForecast.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "forecastCell", for: indexPath) as! ForecastViewCell
+        
+        let hourly = hourlyForecast[indexPath.row]
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:00"
+        let dateString = dateFormatter.string(from: hourly.dt)
+        cell.dateLabel.text = dateString
+        cell.weatherSymbol.image = UIImage(systemName: hourly.conditionName)
+        cell.tempLabel.text = "\(hourly.temp) °C"
+        
+        return cell
     }
     
     func setupView() {
@@ -94,4 +113,5 @@ final class ForecastViewCell: UITableViewCell {
             tempLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
     }
+    
 }
