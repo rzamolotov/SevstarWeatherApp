@@ -21,28 +21,27 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.delegate = self
+        tableView.dataSource = self
+        weatherManager.delegate = self
         locationManager.delegate = self
+        
         locationManager.requestWhenInUseAuthorization() // запрашиваем разрешение на получение геоданных
         locationManager.requestLocation() // запрашиваем геоданные пользователя единоразово
         navigationController?.navigationBar.isHidden = true
-        weatherManager.delegate = self
+        tableView.register(ForecastViewCell.self, forCellReuseIdentifier: "ForecastCell")
+        
         setupView()
     }
     
     func setupView() {
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.reloadData()
-        tableView.register(ForecastViewCell.self, forCellReuseIdentifier: "ForecastCell")
-        
-      
-        
         view.addSubview(tableView)
         view.backgroundColor = .white
         view.addSubview(headerView)
         view.addSubview(currentWeatherView)
         view.addSubview(forecatsContainerView)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDetail))
+        currentWeatherView.addGestureRecognizer(tapGesture)
         setupConstrains()
     }
     
@@ -52,33 +51,20 @@ class ViewController: UIViewController {
     }
     
     func  setupConstrains() {
-        let containerView = UIView()
-        view.addSubview(containerView)
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(headerView)
-        containerView.addSubview(currentWeatherView)
-        containerView.addSubview(forecatsContainerView)
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapDetail))
-        containerView.addGestureRecognizer(tapGesture)
         
         NSLayoutConstraint.activate([
-            //containerView
-            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             //headerView
-            headerView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            headerView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: screenHeight * 0.015),
+            headerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            headerView.topAnchor.constraint(equalTo: view.topAnchor, constant: screenHeight * 0.08),
             //currentWeatherView
-            currentWeatherView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: screenHeight * 0.01),
-            currentWeatherView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -(screenHeight * 0.01)),
+            currentWeatherView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: screenHeight * 0.01),
+            currentWeatherView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -(screenHeight * 0.01)),
             currentWeatherView.topAnchor.constraint(equalTo: headerView.topAnchor, constant: screenHeight * 0.07),
             currentWeatherView.bottomAnchor.constraint(equalTo: currentWeatherView.bottomAnchor),
             //forecastViewCell
             forecatsContainerView.topAnchor.constraint(equalTo: currentWeatherView.bottomAnchor, constant: screenHeight * 0.4),
-            forecatsContainerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: screenHeight * 0.01),
-            forecatsContainerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -(screenHeight * 0.01)),
+            forecatsContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: screenHeight * 0.01),
+            forecatsContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -(screenHeight * 0.01)),
         ])
     }
 }
@@ -103,7 +89,6 @@ extension ViewController: WeatherManagerDelegate {
             self.headerView.headingLabel.text = weather.cityName
             self.currentWeatherView.currentTime.text = dateString
             self.currentWeatherView.feelsLikeDegrees.text = "Ощущается как \(String(weather.fellsLike))°C"
-            
         }
     }
     
@@ -148,7 +133,6 @@ extension ViewController: UITableViewDataSource {
 }
 
 extension ViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return screenHeight * 0.07
     }
